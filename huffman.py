@@ -25,7 +25,7 @@ class Huffman:
         self.decoding = {}
         self.queue = []
 
-    def PixellizePointing(self, write=False):
+    def PixellizePointing(self, diff=True, write=False):
         angs_pol = np.loadtxt(self.infile)
         pixels = hp.ang2pix(self.nside, angs_pol[:,1], angs_pol[:,0])
 
@@ -33,7 +33,12 @@ class Huffman:
             fname, fext = os.path.splitext(self.infile)
             np.save(fname+"_n"+str(self.nside).zfill(4)+"_pixels.npy", pixels)
 
-        return pixels
+        if diff:
+            delta = np.diff(pixels)
+            delta = np.insert(delta, 0, pixels[0])
+            return delta
+        else :
+            return pixels
 
     def Weights(self, array):
         weight = {}
@@ -67,10 +72,7 @@ class Huffman:
 
 
     def GenerateCode(self, array, write=False):
-        delta = np.diff(array)
-        delta = np.insert(delta, 0, array[0])
-
-        weight = self.Weights(delta)
+        weight = self.Weights(array)
 
         for d in weight:
             node = LeafNode(d, weight[d])
@@ -88,11 +90,11 @@ class Huffman:
         node = heapq.heappop(self.queue)
         self.PrintCode(node)
 
-        b = self.byteCode(delta)
+        b = self.byteCode(array)
 
         if write :
             fname, fext = os.path.splitext(self.infile)
-            np.save(fname+"_n"+str(self.nside).zfill(4)+"_diffpix.npy", delta)
+            np.save(fname+"_n"+str(self.nside).zfill(4)+"_diffpix.npy", array)
             outfile = fname + "_n"+str(self.nside).zfill(4)+"_diffpix.bin"
             with open(outfile, 'wb') as f_out :
                 f_out.write(bytes(b))
