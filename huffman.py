@@ -44,9 +44,6 @@ class Huffman:
         return weight
 
     def PrintCode(self, node, code=""):
-        if(node == None):
-            return
-
         if(node.symbol != None):
             self.encoding[node.symbol] = code
             self.decoding[code] = node.symbol
