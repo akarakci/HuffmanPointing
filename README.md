@@ -4,7 +4,7 @@ Huffman coding of a pixellized pointing matrix (in ascii).
 
 Usage :
 
-        h = Huffman("pointing.dat")
+        h = Huffman("pointing.dat", nside)
         
         pixarr = h.PixellizePointing([write=True])  ##retruns pixellized pointing int array
         
