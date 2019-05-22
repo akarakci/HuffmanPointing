@@ -44,7 +44,7 @@ class Huffman:
         weight = {}
         for d in array :
             if not d in weight:
-                    weight[d] = 0
+                weight[d] = 0
             weight[d] += 1
         return weight
 
